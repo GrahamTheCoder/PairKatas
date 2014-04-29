@@ -53,7 +53,7 @@ namespace DataLoggerTests
             dataLogger.Verify(d => d.Plot(It.IsAny<IEnumerable<DataValueAdapter>>()));
         }
 
-        [Test, Timeout(500)]
+        [Test, Timeout(5000)]
         public void CollectsValuesDespiteNonTerminatingProbeReaders()
         {
             var values = Enumerable.Range(0, 5).Select(x => DateTime.MinValue.AddHours(x)).Select(x => new DataValueAdapter(x, null)).ToList();

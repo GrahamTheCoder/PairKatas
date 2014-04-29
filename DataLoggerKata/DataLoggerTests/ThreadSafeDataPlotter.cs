@@ -11,7 +11,7 @@ namespace DataLoggerTests
         private readonly IEnumerable<IProbeReaderAdapter> _probeReaderAdapters;
         private readonly IDataLoggerAdapter _dataLoggerAdapter;
         private readonly BlockingCollection<DataValueAdapter> _valuesToPlot;
-
+        private bool m_Stop = false;
         public ThreadSafeDataPlotter(IEnumerable<IProbeReaderAdapter> probeReaderAdapters, IDataLoggerAdapter dataLoggerAdapter)
         {
             _probeReaderAdapters = probeReaderAdapters;
@@ -27,20 +27,21 @@ namespace DataLoggerTests
                 taskFactory.StartNew(() => ReadFromProbeForever(probeReaderAdapter));
             }
 
-            var dataValueAdapters = _valuesToPlot.GetConsumingEnumerable();
             int collected = 0;
             while (collected < readingsToCollect)
             {
-                var values = dataValueAdapters.Take(5);
+                var values = _valuesToPlot.GetConsumingEnumerable().Take(5);
                 _dataLoggerAdapter.Plot(values);
                 collected += 5;
             }
+
+            m_Stop = true;
 
         }
 
         private void ReadFromProbeForever(IProbeReaderAdapter probeReaderAdapter)
         {
-            while (true)
+            while (!m_Stop)
             {
                 _valuesToPlot.Add(probeReaderAdapter.Read());
             }
