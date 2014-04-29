@@ -1,7 +1,9 @@
-﻿namespace DataLoggerTests
+﻿using System.Collections.Generic;
+
+namespace DataLoggerTests
 {
     public interface IDataLoggerAdapter
     {
-        void Plot(DataValueAdapter isAny);
+        void Plot(IEnumerable<DataValueAdapter> isAny);
     }
 }

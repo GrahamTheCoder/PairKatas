@@ -2,3 +2,4 @@
 */*/obj/
 */*/bin/
 DataLoggerKata/packages/
+*.ncrunchsolution

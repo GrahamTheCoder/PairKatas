@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DataLoggerTests
 {
@@ -17,7 +18,7 @@ namespace DataLoggerTests
         {
             for (int i = 0; i < readingsToCollect; i += 5)
             {
-                _dataLoggerAdapter.Plot(new DataValueAdapter());
+                _dataLoggerAdapter.Plot(new[] { new DataValueAdapter(new DateTime(), null)});
             }
         }
     }
