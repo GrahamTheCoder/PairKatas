@@ -13,7 +13,10 @@
 
         public void Collect(int readingsToCollect)
         {
-            _dataLoggerAdapter.Plot(new DataValueAdapter());
+            for (int i = 0; i < readingsToCollect; i += 5)
+            {
+                _dataLoggerAdapter.Plot(new DataValueAdapter());
+            }
         }
     }
 }
