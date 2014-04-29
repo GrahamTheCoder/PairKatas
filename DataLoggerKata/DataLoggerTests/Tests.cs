@@ -21,6 +21,7 @@ namespace DataLoggerTests
         }
 
         [TestCase(5)]
+        [TestCase(10)]
         public void CollectingFiveValuesPlotsOnce(int numberOfValuesToCollect)
         {
             var probeReader = new Mock<IProbeReaderAdapter>();
