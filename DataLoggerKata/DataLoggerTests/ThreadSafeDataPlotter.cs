@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DataLoggerTests
 {
@@ -16,10 +17,13 @@ namespace DataLoggerTests
 
         public void Collect(int readingsToCollect)
         {
-            for (int i = 0; i < readingsToCollect; i += 5)
+            var readings = new List<DataValueAdapter>(5);
+            for (int i = 1; i <= readingsToCollect; i++)
             {
-                _dataLoggerAdapter.Plot(new[] { new DataValueAdapter(new DateTime(), null)});
+                readings.Add(_probeReaderAdapters.First().Read());
+                if (i%5 == 0) _dataLoggerAdapter.Plot(readings);
             }
+
         }
     }
 }

@@ -40,7 +40,7 @@ namespace DataLoggerTests
         [Test]
         public void CollectedValuesArePlotted()
         {
-            var values = Enumerable.Range(0, 5).Select(x => new DateTime(x)).Select(x => new DataValueAdapter(x, null));
+            var values = Enumerable.Range(0, 5).Select(x => DateTime.MinValue.AddHours(x)).Select(x => new DataValueAdapter(x, null)).ToList();
             var probeReader = new MockProbeReader(values); 
 
             var dataLogger = new Mock<IDataLoggerAdapter>();
