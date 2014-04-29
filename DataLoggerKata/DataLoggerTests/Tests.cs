@@ -15,7 +15,7 @@ namespace DataLoggerTests
         {
             var probeReader = new Mock<IProbeReaderAdapter>();
             var dataLogger = new Mock<IDataLoggerAdapter>();
-            var dataPlotter = new ThreadSafeDataPlotter(probeReader.Object, dataLogger.Object);
+            var dataPlotter = new ThreadSafeDataPlotter(new [] { probeReader.Object}, dataLogger.Object);
             dataPlotter.Collect(0);
             dataLogger.Verify(d => d.Plot(It.IsAny<DataValueAdapter>()), Times.Never);
         }
@@ -27,7 +27,7 @@ namespace DataLoggerTests
             var probeReader = new Mock<IProbeReaderAdapter>();
             probeReader.Setup(x => x.Read()).Returns(ReturnTestValue);
             var dataLogger = new Mock<IDataLoggerAdapter>();
-            var dataPlotter = new ThreadSafeDataPlotter(probeReader.Object, dataLogger.Object);
+            var dataPlotter = new ThreadSafeDataPlotter(new[] { probeReader.Object}, dataLogger.Object);
 
             dataPlotter.Collect(numberOfValuesToCollect);
 

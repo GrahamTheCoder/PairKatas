@@ -1,13 +1,15 @@
-﻿namespace DataLoggerTests
+﻿using System.Collections.Generic;
+
+namespace DataLoggerTests
 {
     public class ThreadSafeDataPlotter
     {
-        private readonly IProbeReaderAdapter _probeReaderAdapter;
+        private readonly IEnumerable<IProbeReaderAdapter> _probeReaderAdapters;
         private readonly IDataLoggerAdapter _dataLoggerAdapter;
 
-        public ThreadSafeDataPlotter(IProbeReaderAdapter probeReaderAdapter, IDataLoggerAdapter dataLoggerAdapter)
+        public ThreadSafeDataPlotter(IEnumerable<IProbeReaderAdapter> probeReaderAdapters, IDataLoggerAdapter dataLoggerAdapter)
         {
-            _probeReaderAdapter = probeReaderAdapter;
+            _probeReaderAdapters = probeReaderAdapters;
             _dataLoggerAdapter = dataLoggerAdapter;
         }
 
