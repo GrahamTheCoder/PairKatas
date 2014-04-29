@@ -13,6 +13,7 @@
 
         public void Collect(int readingsToCollect)
         {
+            _dataLoggerAdapter.Plot(new DataValueAdapter());
         }
     }
 }
