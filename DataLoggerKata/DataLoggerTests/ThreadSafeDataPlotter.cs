@@ -13,7 +13,6 @@
 
         public void Collect(int readingsToCollect)
         {
-            throw new System.NotImplementedException();
         }
     }
 }
