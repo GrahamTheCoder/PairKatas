@@ -20,17 +20,18 @@ namespace DataLoggerTests
             dataLogger.Verify(d => d.Plot(It.IsAny<DataValueAdapter>()), Times.Never);
         }
 
-        [Test]
-        public void CollectingFiveValuesPlotsOnce()
+        [TestCase(5)]
+        public void CollectingFiveValuesPlotsOnce(int numberOfValuesToCollect)
         {
             var probeReader = new Mock<IProbeReaderAdapter>();
             probeReader.Setup(x => x.Read()).Returns(ReturnTestValue);
             var dataLogger = new Mock<IDataLoggerAdapter>();
             var dataPlotter = new ThreadSafeDataPlotter(probeReader.Object, dataLogger.Object);
 
-            dataPlotter.Collect(5);
+            dataPlotter.Collect(numberOfValuesToCollect);
 
-            dataLogger.Verify(d => d.Plot(It.IsAny<DataValueAdapter>()), Times.Once);
+            int completeBatchesOfFive = numberOfValuesToCollect / 5;
+            dataLogger.Verify(d => d.Plot(It.IsAny<DataValueAdapter>()), Times.Exactly(completeBatchesOfFive));
         }
 
         private DataValueAdapter ReturnTestValue()
