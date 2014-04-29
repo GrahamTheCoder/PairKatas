@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -51,6 +52,34 @@ namespace DataLoggerTests
             dataPlotter.Collect(5);
             dataLogger.Verify(d => d.Plot(It.IsAny<IEnumerable<DataValueAdapter>>()));
         }
+
+        [Test, Timeout(500)]
+        public void CollectsValuesDespiteNonTerminatingProbeReaders()
+        {
+            var values = Enumerable.Range(0, 5).Select(x => DateTime.MinValue.AddHours(x)).Select(x => new DataValueAdapter(x, null)).ToList();
+            var probeReader = new MockProbeReader(values);
+            var hangingProbeReader = new Mock<IProbeReaderAdapter>();
+            hangingProbeReader.Setup(x => x.Read()).Returns(Hang());
+            var probeReaderAdapters = new[] { hangingProbeReader.Object, probeReader, hangingProbeReader.Object};
+
+
+            var dataLogger = new Mock<IDataLoggerAdapter>();
+            dataLogger.Setup(x => x.Plot(It.IsAny<IEnumerable<DataValueAdapter>>()))
+                .Callback<IEnumerable<DataValueAdapter>>(plottedValues => Assert.That(plottedValues, Is.EqualTo(values)));
+            
+            var dataPlotter = new ThreadSafeDataPlotter(probeReaderAdapters, dataLogger.Object);
+
+            dataPlotter.Collect(5);
+            dataLogger.Verify(d => d.Plot(It.IsAny<IEnumerable<DataValueAdapter>>()));
+        }
+
+        private static Func<DataValueAdapter> Hang()
+        {
+            return () => {
+                             while (true) ;
+            };
+        }
+
 
         private DataValueAdapter ReturnTestValue()
         {
