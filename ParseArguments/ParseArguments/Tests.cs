@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using System.Linq;
 
 namespace ParseArguments
 {
@@ -15,9 +14,19 @@ namespace ParseArguments
             Assert.That(parsedArgs.Count, Is.EqualTo(0));
         }
 
+        [Test]
+        public void GivenZeroValuedFlagReturnsOneParsedBooleanArg()
+        {
+            const char flag = 's';
+            const char argPrefix = '-';
+            var fullFlag = new char[] {argPrefix, flag};
+            var parsedArgs = ParseArgs(new string[] {new string(fullFlag)});
+            Assert.That(parsedArgs[flag], Is.EqualTo(true));
+        }
+
         private IDictionary<char, object> ParseArgs(string[] args)
         {
-            throw new NotImplementedException();
+            return new Dictionary<char, object>();
         }
     }
 }
