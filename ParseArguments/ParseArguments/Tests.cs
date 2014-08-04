@@ -15,12 +15,17 @@ namespace ParseArguments
         {
             m_Dictionary = dictionary;
         }
-        
+
         public static ParsedArgs ParseArgs(string[] args)
         {
-            return new ParsedArgs(args.Select((s, i) => ParseArg(args, s, i)).Where(x => x != null).Select(x => x.Value).ToDictionary(x => x.Key, x => x.Value));
+            return
+                new ParsedArgs(
+                    args.Select((s, i) => ParseArg(args, s, i))
+                        .Where(x => x != null)
+                        .Select(x => x.Value)
+                        .ToDictionary(x => x.Key, x => x.Value));
         }
-        
+
         private static KeyValuePair<char, object>? ParseArg(string[] args, string arg, int index)
         {
 
@@ -37,9 +42,20 @@ namespace ParseArguments
             else return null;
         }
 
-        private static int GetParsedValue(string nextArg)
+        private static object GetParsedValue(string nextArg)
         {
-            return int.Parse(nextArg);
+            int intValue;
+            double doubleValue;
+            float floatValue;
+            if (int.TryParse(nextArg, out intValue))
+            {
+                return intValue;
+            }
+            else if (double.TryParse(nextArg, out doubleValue))
+            {
+                return doubleValue;
+            }
+            return nextArg;
         }
 
         public int Count()
@@ -96,7 +112,8 @@ namespace ParseArguments
 
         [TestCase(2)]
         [TestCase("kittens")]
-        public void GivenOneIntegerValueParsedArgsReturnsOneIntegerValue(object flagValue)
+        [TestCase(2.14)]
+        public void GivenOneValueParsedArgsReturnsOneValue(object flagValue)
         {
             const char flag = 'i';
             var fullFlag = new char[] {m_ArgPrefix, flag};
@@ -104,5 +121,6 @@ namespace ParseArguments
             Assert.That(parsedArgs[flag], Is.EqualTo(flagValue));
         }
 
+        
     }
 }
