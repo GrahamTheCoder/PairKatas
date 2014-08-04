@@ -8,6 +8,8 @@ namespace ParseArguments
     public class ParsedArgs
     {
         private readonly IDictionary<char, object> m_Dictionary;
+        private const bool IsPresentValue = true;
+        private const char FlagSpecifier = '-';
 
         private ParsedArgs(IDictionary<char, object> dictionary)
         {
@@ -22,13 +24,22 @@ namespace ParseArguments
         private static KeyValuePair<char, object>? ParseArg(string[] args, string arg, int index)
         {
 
-            if (arg[0] == '-')
+            if (arg[0] == FlagSpecifier)
             {
+                var flagLetter = arg[1];
                 var nextArg = args.Length -1 == index ? "-nomoreargs" : args[index + 1];
-                if (nextArg[0] == '-') return new KeyValuePair<char, object>(arg[1], true);
-                else return new KeyValuePair<char, object>(arg[1], int.Parse(nextArg));
+                bool hasAssociatedValue = nextArg[0] != FlagSpecifier;
+
+                var value = hasAssociatedValue ? GetParsedValue(nextArg) : (object)IsPresentValue;
+
+                return new KeyValuePair<char, object>(flagLetter, value);
             }
             else return null;
+        }
+
+        private static int GetParsedValue(string nextArg)
+        {
+            return int.Parse(nextArg);
         }
 
         public int Count()
