@@ -7,22 +7,37 @@ namespace ParseArguments
 {
     public class ParsedArgs
     {
-        public IDictionary<char, object> ParseArgs(string[] args)
+        private readonly IDictionary<char, object> m_Dictionary;
+
+        private ParsedArgs(IDictionary<char, object> dictionary)
         {
-            return args.ToDictionary(a => a[1], _ => (object) true);
+            m_Dictionary = dictionary;
+        }
+        
+        public static ParsedArgs ParseArgs(string[] args)
+        {
+            return new ParsedArgs(args.ToDictionary(a => a[1], _ => (object) true));
+        }
+
+        public int Count()
+        {
+            return m_Dictionary.Count;
+        }
+
+        public object this[char flag]
+        {
+            get { return m_Dictionary[flag]; }
         }
     }
 
     [TestFixture]
     public class Tests
     {
-        private readonly ParsedArgs m_ParsedArgs = new ParsedArgs();
-
         [Test]
         public void GivenZeroArgsReturnsZeroParsedArgs()
         {
-            var parsedArgs = m_ParsedArgs.ParseArgs(new String[0]);
-            Assert.That(parsedArgs.Count, Is.EqualTo(0));
+            var parsedArgs = ParsedArgs.ParseArgs(new String[0]);
+            Assert.That(parsedArgs.Count(), Is.EqualTo(0));
         }
 
         [Test]
@@ -31,7 +46,7 @@ namespace ParseArguments
             const char flag = 's';
             const char argPrefix = '-';
             var fullFlag = new char[] {argPrefix, flag};
-            var parsedArgs = m_ParsedArgs.ParseArgs(new string[] {new string(fullFlag)});
+            var parsedArgs = ParsedArgs.ParseArgs(new string[] {new string(fullFlag)});
             Assert.That(parsedArgs[flag], Is.EqualTo(true));
         }
 
@@ -39,7 +54,7 @@ namespace ParseArguments
         public void GivenZeroArgsParsedArgsAreFalse()
         {
             const char flag = 's';
-            var parsedArgs = m_ParsedArgs.ParseArgs(new string[0]);
+            var parsedArgs = ParsedArgs.ParseArgs(new string[0]);
             Assert.That(parsedArgs[flag], Is.EqualTo(false));
         }
     }
