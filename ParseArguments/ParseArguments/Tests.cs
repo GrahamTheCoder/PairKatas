@@ -5,13 +5,23 @@ using NUnit.Framework;
 
 namespace ParseArguments
 {
+    public class ParsedArgs
+    {
+        public IDictionary<char, object> ParseArgs(string[] args)
+        {
+            return args.ToDictionary(a => a[1], _ => (object) true);
+        }
+    }
+
     [TestFixture]
     public class Tests
     {
+        private readonly ParsedArgs m_ParsedArgs = new ParsedArgs();
+
         [Test]
         public void GivenZeroArgsReturnsZeroParsedArgs()
         {
-            var parsedArgs = ParseArgs(new String[0]);
+            var parsedArgs = m_ParsedArgs.ParseArgs(new String[0]);
             Assert.That(parsedArgs.Count, Is.EqualTo(0));
         }
 
@@ -21,7 +31,7 @@ namespace ParseArguments
             const char flag = 's';
             const char argPrefix = '-';
             var fullFlag = new char[] {argPrefix, flag};
-            var parsedArgs = ParseArgs(new string[] {new string(fullFlag)});
+            var parsedArgs = m_ParsedArgs.ParseArgs(new string[] {new string(fullFlag)});
             Assert.That(parsedArgs[flag], Is.EqualTo(true));
         }
 
@@ -29,13 +39,8 @@ namespace ParseArguments
         public void GivenZeroArgsParsedArgsAreFalse()
         {
             const char flag = 's';
-            var parsedArgs = ParseArgs(new string[0]);
+            var parsedArgs = m_ParsedArgs.ParseArgs(new string[0]);
             Assert.That(parsedArgs[flag], Is.EqualTo(false));
-        }
-
-        private IDictionary<char, object> ParseArgs(string[] args)
-        {
-            return args.ToDictionary(a => a[1], _ => (object) true);
         }
     }
 }
