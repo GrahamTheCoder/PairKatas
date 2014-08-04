@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace ParseArguments
@@ -26,7 +27,7 @@ namespace ParseArguments
 
         private IDictionary<char, object> ParseArgs(string[] args)
         {
-            return new Dictionary<char, object>();
+            return args.ToDictionary(a => a[1], _ => (object) true);
         }
     }
 }
