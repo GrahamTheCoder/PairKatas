@@ -94,14 +94,15 @@ namespace ParseArguments
             Assert.That(parsedArgs[flag], Is.EqualTo(false));
         }
 
-        [Test]
-        public void GivenOneIntegerValueParsedArgsReturnsOneIntegerValue()
+        [TestCase(2)]
+        [TestCase("kittens")]
+        public void GivenOneIntegerValueParsedArgsReturnsOneIntegerValue(object flagValue)
         {
             const char flag = 'i';
             var fullFlag = new char[] {m_ArgPrefix, flag};
-            var value = 2;
-            var parsedArgs = ParsedArgs.ParseArgs(new[] {new string(fullFlag), value.ToString()});
-            Assert.That(parsedArgs[flag], Is.EqualTo(value));
+            var parsedArgs = ParsedArgs.ParseArgs(new[] {new string(fullFlag), flagValue.ToString()});
+            Assert.That(parsedArgs[flag], Is.EqualTo(flagValue));
         }
+
     }
 }
