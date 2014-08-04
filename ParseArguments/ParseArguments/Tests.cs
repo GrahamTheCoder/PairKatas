@@ -25,6 +25,14 @@ namespace ParseArguments
             Assert.That(parsedArgs[flag], Is.EqualTo(true));
         }
 
+        [Test]
+        public void GivenZeroArgsParsedArgsAreFalse()
+        {
+            const char flag = 's';
+            var parsedArgs = ParseArgs(new string[0]);
+            Assert.That(parsedArgs[flag], Is.EqualTo(false));
+        }
+
         private IDictionary<char, object> ParseArgs(string[] args)
         {
             return args.ToDictionary(a => a[1], _ => (object) true);
