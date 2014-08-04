@@ -46,7 +46,6 @@ namespace ParseArguments
         {
             int intValue;
             double doubleValue;
-            float floatValue;
             if (int.TryParse(nextArg, out intValue))
             {
                 return intValue;
